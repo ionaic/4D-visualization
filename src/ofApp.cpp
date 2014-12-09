@@ -2,14 +2,14 @@
 
 //--------------------------------------------------------------
 void ofApp::generateCubeIndices(std::vector<unsigned int> &dest,
-    unsigned int f_l_b, 
-    unsigned int f_r_b, 
-    unsigned int f_r_t, 
-    unsigned int f_l_t,
-    unsigned int b_l_b, 
-    unsigned int b_r_b, 
-    unsigned int b_r_t, 
-    unsigned int b_l_t
+    unsigned int f_l_b, // front left bottom
+    unsigned int f_r_b, // front right bottom
+    unsigned int f_r_t, // front right top
+    unsigned int f_l_t, // front left top
+    unsigned int b_l_b, // back left bottom
+    unsigned int b_r_b, // back right bottom
+    unsigned int b_r_t, // back right top
+    unsigned int b_l_t  // back left top
 ) {
     // front face
     dest.push_back(f_l_b);
@@ -67,27 +67,32 @@ void ofApp::generateCubeIndices(std::vector<unsigned int> &dest,
 }
 
 //--------------------------------------------------------------
-void generateHypercube(std::vector<float> &vertices, std::vector<unsigned int> &indices, float size) {
+void ofApp::generateHypercube(std::vector<float> &vertices, std::vector<unsigned int> &indices, float size) {
+    // generate vertices
     for (unsigned int idx = 0; idx < 4; ++idx) {
         vertices.push_back(0.0);
         vertices.push_back(0.0);
         vertices.push_back(idx % 2 * size);
-        vertices.push_back(((float)(idx > 1)) * size);
+        vertices.push_back(1.0f);
+        //vertices.push_back(((float)(idx > 1)) * size);
 
         vertices.push_back(size);
         vertices.push_back(0.0);
         vertices.push_back(idx % 2 * size);
-        vertices.push_back(((float)(idx > 1)) * size);
+        vertices.push_back(1.0f);
+        //vertices.push_back(((float)(idx > 1)) * size);
 
         vertices.push_back(size);
         vertices.push_back(size);
         vertices.push_back(idx % 2 * size);
-        vertices.push_back(((float)(idx > 1)) * size);
+        vertices.push_back(1.0f);
+        //vertices.push_back(((float)(idx > 1)) * size);
 
         vertices.push_back(0.0);
         vertices.push_back(size);
         vertices.push_back(idx % 2 * size);
-        vertices.push_back(((float)(idx > 1)) * size);
+        vertices.push_back(1.0f);
+        //vertices.push_back(((float)(idx > 1)) * size);
     }
 
     generateCubeIndices(indices, 0, 1, 2, 3, 5, 4, 7, 6); // main cube
@@ -102,17 +107,139 @@ void generateHypercube(std::vector<float> &vertices, std::vector<unsigned int> &
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-    
+    generateHypercube(hcube_vert, hcube_idx, 100.0f);
+
+    // the hypercube is white, non-hypercube is blue
+    for (unsigned int idx = 0; idx < hcube_vert.size(); ++idx) {
+        //unsigned int list_factor = (idx > hcube_vert.size()/2);
+        unsigned int list_factor = 0.0f;
+        ofFloatColor c((float)list_factor, (float)list_factor, 1.0f, 1.0f);
+        hcube_color.push_back(c);
+        //hcube_color.push_back((float) list_factor);
+        //hcube_color.push_back((float) list_factor);
+        //hcube_color.push_back(1.0f);
+        //hcube_color.push_back(1.0f);
+    }
+
+    // trying to use a mesh to add the vertices instead and then modify the position attributes later
+    for (std::vector<float>::iterator itr = hcube_vert.begin(); itr != hcube_vert.end(); ++itr) {
+        ofVec3f vert;
+
+        // set x
+        vert.x = *itr;
+        // set y
+        if (itr != hcube_vert.end()) {
+            vert.y = *(++itr);
+        }
+        // set z
+        if (itr != hcube_vert.end()) {
+            vert.z = *(++itr);
+        }
+        // ignore w
+        if (itr != hcube_vert.end()) {
+            ++itr;
+        }
+        cube_mesh.addVertex(vert);
+        hcube_vert3f.push_back(vert);
+    }
+
+    //hcube_vbo.setMesh(cube_mesh, GL_STATIC_DRAW);
+
+    // debug print verts
+    for (std::vector<float>::iterator itr = hcube_vert.begin(); itr != hcube_vert.end(); ++itr) {
+        std::cout << "(" << *itr;
+        if (itr != hcube_vert.end()) {
+            std::cout << ", " << *(++itr);
+        }
+        if (itr != hcube_vert.end()) {
+            std::cout << ", " << *(++itr);
+        }
+        if (itr != hcube_vert.end()) {
+            std::cout << ", " << *(++itr) << ")" << std::endl;
+        }
+    }
+
+    // debug print indices
+    for (std::vector<unsigned int>::iterator itr = hcube_idx.begin(); itr != hcube_idx.end(); ++itr) {
+        std::cout << "(" << *itr;
+        if (itr != hcube_idx.end()) {
+            std::cout << ", " << *(++itr);
+        }
+        if (itr != hcube_idx.end()) {
+            std::cout << ", " << *(++itr);
+        }
+        if (itr != hcube_idx.end()) {
+            std::cout << ", " << *(++itr);
+        }
+        if (itr != hcube_idx.end()) {
+            std::cout << ", " << *(++itr);
+        }
+        if (itr != hcube_idx.end()) {
+            std::cout << ", " << *(++itr) << ")" << std::endl;
+        }
+    }
+
+    // debug print colors
+    for (std::vector<ofFloatColor>::iterator itr = hcube_color.begin(); itr != hcube_color.end(); ++itr) {
+        std::cout << *itr << std::endl;
+        //std::cout << "(" << *itr;
+        //if (itr != hcube_color.end()) {
+        //    std::cout << ", " << *(++itr);
+        //}
+        //if (itr != hcube_color.end()) {
+        //    std::cout << ", " << *(++itr);
+        //}
+        //if (itr != hcube_color.end()) {
+        //    std::cout << ", " << *(++itr) << ")" << std::endl;
+        //}
+    }
+
+    hcube_vbo.setAttributeData(ofShader::POSITION_ATTRIBUTE, &hcube_vert[0], 4, hcube_vert.size(), GL_STATIC_DRAW);
+    //hcube_vbo.setVertexData(&hcube_vert3f[0], hcube_vert3f.size(), GL_STATIC_DRAW);
+    hcube_vbo.setColorData(&hcube_color[0], hcube_color.size(), GL_STATIC_DRAW);
+    hcube_vbo.setIndexData(&hcube_idx[0], hcube_idx.size(), GL_STATIC_DRAW);
+
+    //std::cout << hcube_vbo << std::endl;
+
+    camera.setPosition(ofGetWidth()/2, ofGetHeight()/2, 1);
+    camera.lookAt(ofVec3f(0.5, 0.5, 0.5));
+
+    light.setSpotlight();
+    light.setPosition(ofGetWidth()/2 + 100, ofGetHeight()/2 - 100, 1);
+    light.lookAt(ofVec3f(0.5, 0.5, 0.5));
+
+    glDisable(GL_CULL_FACE);
+
+    sphere.setRadius(100.0f);
+    sphere.setPosition(0.0, 0.0, 0.0);
+
+    std::cout << hcube_vbo.getNumVertices()<< std::endl;
+    std::cout << hcube_vbo.getNumIndices()<< std::endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
+    camera.begin();
+
+    light.enable();
+
+    hcube_vbo.drawElements(GL_TRIANGLES, hcube_idx.size());
+    //glPointSize(10.0f);
+    //hcube_vbo.draw(GL_POINTS, 0, hcube_vbo.getNumVertices());
+    //cube_mesh.draw(OF_MESH_POINTS);
+    //sphere.draw();
+
+    light.disable();
+
+    camera.end();
 }
 
 //--------------------------------------------------------------

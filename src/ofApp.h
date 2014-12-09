@@ -37,4 +37,13 @@ class ofApp : public ofBaseApp{
         
         std::vector<float> hcube_vert;
         std::vector<unsigned int> hcube_idx;
+        std::vector<ofFloatColor> hcube_color;
+        std::vector<ofVec3f> hcube_vert3f;
+
+        ofVbo hcube_vbo;
+        ofLight light;
+        ofCamera camera;
+
+        ofSpherePrimitive sphere;
+        ofMesh cube_mesh;
 };
