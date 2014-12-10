@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-
 #include <vector>
 
 class ofApp : public ofBaseApp{
@@ -34,16 +33,21 @@ class ofApp : public ofBaseApp{
             unsigned int b_r_t, // back right top
             unsigned int b_l_t  // back left top
         );
+
+        ofShader testShader;
         
         std::vector<float> hcube_vert;
         std::vector<unsigned int> hcube_idx;
-        std::vector<ofFloatColor> hcube_color;
-        std::vector<ofVec3f> hcube_vert3f;
+        std::vector<float> hcube_color;
+        std::vector<float> hcube_vert_vel;
 
         ofVbo hcube_vbo;
         ofLight light;
         ofCamera camera;
 
-        ofSpherePrimitive sphere;
-        ofMesh cube_mesh;
+        bool fullscreen;
+        bool randomMovement;
+
+        int lastMX, lastMY;
+        int screen_width, screen_height;
 };
