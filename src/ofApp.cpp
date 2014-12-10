@@ -111,6 +111,7 @@ void ofApp::setup() {
 
     fullscreen = false;
     randomMovement = false;
+    rotate = false;
 
     screen_width = ofGetScreenWidth();
     screen_height = ofGetScreenHeight();
@@ -201,6 +202,21 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+    //if (rotate) {
+    //    for (unsigned int idx = 0; idx < hcube_vert.size() - 4 && idx < hcube_vert.size() - 4; ++idx) {
+    //        // ruh roh raggy, rhis ray re rull rut re're
+    //        // r(k)etching ro rho rares! (this may be null but
+    //        // we're sketching so who cares!)
+    //        ofNode pos(hcube_vert[idx], hcube_vert[idx + 1], hcube_vert[idx + 2], hcube_vert[idx + 3]);
+    //        pos.rotateAround(5, ofVec3f(0.0f, 1.0f, 0.0f), ofVec3f(0.0f, 0.0f, 0.0f));
+
+    //        hcube_vert[idx] = pos.x;
+    //        hcube_vert[idx + 1] = pos.y;
+    //        hcube_vert[idx + 2] = pos.z;
+    //        hcube_vert[idx + 3] = pos.w;
+    //    }
+    //}
+
     if (randomMovement) {
         // update the positions based on the velocity
         // ONE BIG MEDIEVAL MESS.  I blame iterator and scope
@@ -276,6 +292,11 @@ void ofApp::keyPressed(int key) {
             hcube_color.clear();
             hcube_vert_vel.clear();
             setup();
+            break;
+        case 's':
+        case 'S':
+            // rotate things because it'll look pretty
+            rotate = !rotate;
             break;
     }
 }

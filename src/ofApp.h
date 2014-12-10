@@ -47,6 +47,7 @@ class ofApp : public ofBaseApp{
 
         bool fullscreen;
         bool randomMovement;
+        bool rotate;
 
         int lastMX, lastMY;
         int screen_width, screen_height;
