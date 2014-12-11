@@ -3,6 +3,18 @@
 #include "ofMain.h"
 #include <vector>
 
+union Mat5x5 {
+    struct {
+        float _00, _01, _02, _03, _04,
+              _10, _11, _12, _13, _14,
+              _20, _21, _22, _23, _24,
+              _30, _31, _32, _33, _34,
+              _40, _41, _42, _43, _44;
+    };
+    float data[5][5];
+    float data_v[25];
+};
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -41,6 +53,9 @@ class ofApp : public ofBaseApp{
         std::vector<float> hcube_color;
         std::vector<float> hcube_vert_vel;
 
+        Mat5x5 view4D;
+        Mat5x5 proj4D;
+
         ofVbo hcube_vbo;
         ofLight light;
         ofCamera camera;
@@ -51,4 +66,5 @@ class ofApp : public ofBaseApp{
 
         int lastMX, lastMY;
         int screen_width, screen_height;
+
 };
